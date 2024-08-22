@@ -4,8 +4,9 @@
 
 
 
-let game = new Game();
+
 function setup() {
+  game = new GameManager();
   game.setup();
 }
 
