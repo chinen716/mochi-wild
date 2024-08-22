@@ -1,6 +1,6 @@
 
 // 地面を描画する関数
-function drawGround(seed) {
+function drawGround(xPos,yPos,seed) {
     fill(139, 69, 19); // 茶色
     stroke(0);
     strokeWeight(3);
@@ -8,8 +8,8 @@ function drawGround(seed) {
     // コロッケの形を描画
     let groundWidth = 1900;
     let groundHeight = 850;
-    let groundX = 511;
-    let groundY = 511;
+    let groundX = xPos;
+    let groundY = yPos;
     
     // ギザギザの縁を描画
     let numPoints = 20; // 頂点の数を増やす
