@@ -37,19 +37,19 @@ class GameManager {
       brightness = ("#484848ff");
 
 
-      let animalCount  =50;
+      let animalCount  =10;
 
 
       for (let i = 0; i < animalCount; i++) {
-      this.xpos = random(-6000, 4000);
+      this.xpos = random(-600, 4000);
       this.ypos = random(0, height);
       const pos= createVector(this.xpos, this.ypos);
       if(i % 2 == 0){
         const anim = new Echo(random(40, 50), random(50, 100),pos, 100, data[int(random(0, data.length))][1], Math.random() < 0.5 ? -1 : 1);
         this.animals.push(anim);
-      // }else{
-      //   const anim = new Deco(random(40, 50), random(50, 100), pos, 1, data[int(random(0, data.length))][1], Math.random() < 0.5 ? -1 : 1);
-      //   this.animals.push(anim);
+      }else{
+        const anim = new Deco(random(40, 50), random(50, 100), pos, 1, data[int(random(0, data.length))][1], Math.random() < 0.5 ? -1 : 1);
+        this.animals.push(anim);
       }
 
       }
@@ -85,15 +85,17 @@ class GameManager {
       for (let i = 0; i < this.animals.length; i++) {
         this.animals[i].drawAnimal();
         ellipse(this.animals[i].newPos.x, this.animals[i].newPos.y, 111);
-        console.log(this.animals[i].position.x);
+        text(i,this.animals[i].newPos.x, this.animals[i].newPos.y,1);
         let distFromMouse = Echo.calculateDistanceFromMouse(this.animals[i], mouseX, mouseY, this.scrollX);
         distFromMouseList.push(distFromMouse);
       }
 
       this.minIndex = Echo.findClosestAnimalIndex(distFromMouseList);
+      console.log(this.minIndex);
       if (this.newMinIndex != this.minIndex) {
         this.newMinIndex = this.minIndex;
         this.captureCount = 0;
+        console.log("unko!");
       }
     
     
@@ -116,8 +118,8 @@ class GameManager {
         fill(255, 255, 255, 0);
         noStroke();
         fill(255, 0, 0, 120);
-        ellipse(this.animals[this.minIndex].position.x, this.animals[this.minIndex].position.y, 10 + this.captureCount);
-        console.log(this.captureCount);
+        ellipse(this.animals[this.minIndex].newPos.x, this.animals[this.minIndex].newPos.y, this.captureCount);
+
         if (this.captureCount > 100) {
           this.capturedAnimals.push(this.animals[this.minIndex]);
           this.animals.splice(this.minIndex, 1);
