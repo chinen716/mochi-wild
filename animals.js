@@ -24,18 +24,19 @@ class Echo extends Character{
       this.count = 0;
       this.position = position;
       this.startTime = Date.now(); // 開始時間を保存
+      this.newPos = createVector(0,0);
 
     }
 
 
-    updateAnimalDirection() {
-      console.log("Before update direction:", this.direction);
+    updateAnimalDirection(direction) {
       const time = int((Date.now() - this.startTime) / 100);
       if ((this.activeLevel + time) % 60 === 0) {
-        this.direction = random(-3, 3);
+        direction = random(-3, 3);
         this.startTime = 0;
       }
-      console.log("After update direction:", this.direction);
+      //console.log(direction);
+      return direction;
     }
 
   drawAnimal() {
@@ -46,14 +47,16 @@ class Echo extends Character{
     this.setStrokeWeight();
     stroke("black");
 
-    this.updateAnimalDirection();
-    this.position.x += this.direction;
+    this.direction = this.updateAnimalDirection(this.direction);
+    this.position.x = this.position.x + this.direction;
+    ellipse(this.position.x, this.position.y, 111);
     push();
-    //新しい位置を設定
-    this.setDisplacement(this.position.x);
+    let displacement = createVector(this.position.x, 0);
+
+
 
     // 新しい位置に平行移動
-    translate(createVector(this.position.x,0));
+    translate(displacement);
 
     // 頂点の初期化
     this.vertices = [];
@@ -95,10 +98,13 @@ class Echo extends Character{
       }
 
       textSize(20);
-      text(this.newPos.x,this.headCenter.x,this.headCenter.y,1);
-      this.newPos = createVector(this.position.x + this.displacement.x - this.width / 2, this.position.y - this.height / 2);
+       text(this.newPos.x,this.headCenter.x,this.headCenter.y,1);
 
       pop();
+      
+      this.newPos = createVector(this.headCenter.x + displacement.x - this.width / 2, this.position.y - this.height / 2);
+      //this.position.x = this.headCenter.x + displacement.x - this.width / 2;
+
       // 新しい位置を設定
 
 
