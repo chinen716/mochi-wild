@@ -37,7 +37,7 @@ class GameManager {
       brightness = ("#484848ff");
 
 
-      let animalCount  =10;
+      let animalCount  =30;
 
 
       for (let i = 0; i < animalCount; i++) {
@@ -84,7 +84,8 @@ class GameManager {
       
       for (let i = 0; i < this.animals.length; i++) {
         this.animals[i].drawAnimal();
-        ellipse(this.animals[i].newPos.x, this.animals[i].newPos.y, 111);
+        noFill();
+        //ellipse(this.animals[i].newPos.x, this.animals[i].newPos.y, 111);
         text(i,this.animals[i].newPos.x, this.animals[i].newPos.y,1);
         let distFromMouse = Echo.calculateDistanceFromMouse(this.animals[i], mouseX, mouseY, this.scrollX);
         distFromMouseList.push(distFromMouse);

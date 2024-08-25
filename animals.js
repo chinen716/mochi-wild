@@ -1,13 +1,13 @@
 
 class Echo extends Character{
-    constructor(width, height, position, speed, color, direction) {
-      super(width, height, position, speed, color, direction);
+    constructor(width, height, startPos, speed, color, direction) {
+      super(width, height, startPos, speed, color, direction);
       this.fillet = 15;
       this.newPos = createVector(0,0);
-      this.headCenter = createVector(this.position.x,this.position.y-(this.height-this.width/2));
+      this.headCenter = createVector(this.startPos.x,this.startPos.y-(this.height-this.width/2));
       this.bodySize = (this.height-this.width*2.5/4);
       this.bodySizeOffset = 0;
-      this.bodyCenter = createVector(this.position.x,(this.position.y-this.bodySize/2));
+      this.bodyCenter = createVector(this.startPos.x,(this.startPos.y-this.bodySize/2));
       this.bodyCorner0 = createVector(this.bodyCenter.x+this.width/2*-1,this.bodyCenter.y+this.bodySize/2);   // 1------2
       this.bodyCorner1 = createVector(this.bodyCenter.x+this.width/2*-1,this.bodyCenter.y+this.bodySize/2*-1);// | body |
       this.bodyCorner2 = createVector(this.bodyCenter.x+this.width/2,this.bodyCenter.y+this.bodySize/2*-1);   // |      |
@@ -22,9 +22,10 @@ class Echo extends Character{
       this.id = null;
       this.activeLevel = int(random(0, 100));
       this.count = 0;
-      this.position = position;
+      this.startPos = startPos;
       this.startTime = Date.now(); // 開始時間を保存
       this.newPos = createVector(0,0);
+      this.displacement = 0;
 
     }
 
@@ -48,10 +49,11 @@ class Echo extends Character{
     stroke("black");
 
     this.direction = this.updateAnimalDirection(this.direction);
-    this.position.x = this.position.x + this.direction;
-    ellipse(this.position.x, this.position.y, 111);
+    this.startPos.x = this.startPos.x + this.direction;
     push();
-    let displacement = createVector(this.position.x, 0);
+    //ellipse(this.startPos.x, this.startPos.y, 111);
+
+    let displacement = createVector(this.startPos.x, 0);
 
 
 
@@ -102,8 +104,10 @@ class Echo extends Character{
 
       pop();
       
-      this.newPos = createVector(this.headCenter.x + displacement.x - this.width / 2, this.position.y - this.height / 2);
-      //this.position.x = this.headCenter.x + displacement.x - this.width / 2;
+      this.newPos = createVector(this.headCenter.x + displacement.x - this.width / 2, this.startPos.y - this.height / 2);
+      ellipse(this.headCenter.x + displacement.x - this.width / 2, this.headCenter.y, 111);
+
+      //this.startPos.x = this.headCenter.x + displacement.x - this.width / 2;
 
       // 新しい位置を設定
 
@@ -183,15 +187,15 @@ class Echo extends Character{
 
 
 class Deco extends Character {
-  constructor(width, height, position, speed, color, direction, size) {
-      super(width, height, position, speed, color, direction);
+  constructor(width, height, startPos, speed, color, direction, size) {
+      super(width, height, startPos, speed, color, direction);
       this.size = size; // サイズを追加
-      this.initialPosition = { ...position }; // 初期位置を保存
+      this.initialPosition = { ...startPos }; // 初期位置を保存
       this.controlPoints = [
-          { x: position.x, y: position.y }, // 地面の位置
-          { x: position.x - 0, y: position.y - 50 }, // 少し左に傾いた位置
-          { x: position.x - 0, y: position.y - 100 }, // さらに左に傾いた位置
-          { x: position.x, y: position.y - 150 } // すすきの上部の位置
+          { x: startPos.x, y: startPos.y }, // 地面の位置
+          { x: startPos.x - 0, y: startPos.y - 50 }, // 少し左に傾いた位置
+          { x: startPos.x - 0, y: startPos.y - 100 }, // さらに左に傾いた位置
+          { x: startPos.x, y: startPos.y - 150 } // すすきの上部の位置
       ];
 
       this.baseEllipseSize = { width: 60, height: 130}; // サイズに基づいて共通のサイズを設定
@@ -318,6 +322,6 @@ class Deco extends Character {
 
       // スケーリングを解除
       pop();
-      this.newPos = createVector(this.position.x , this.position.y );
+      this.newPos = createVector(this.startPos.x , this.startPos.y );
   }
 }

@@ -1,8 +1,8 @@
 class Character {
-    constructor(width,height,position,speed,color,direction){
+    constructor(width,height,startPos,speed,color,direction){
         this.width = width;
         this.height = height;
-        this.position = position;
+        this.startPos = startPos;
         this.speed = speed;
         this.color = color;
         this.direction = direction;
@@ -35,13 +35,13 @@ class Character {
     }
     
     // updateAnimalPosition(animal) {
-    //     this.position += animal.direction;
-    //     animal.emergentAnimal(this.position, animal.direction);
-    //     return this.position;
+    //     this.startPos += animal.direction;
+    //     animal.emergentAnimal(this.startPos, animal.direction);
+    //     return this.startPos;
     // }
     
     static calculateDistanceFromMouse(animal, mouseX, mouseY, scrollX) {
-        const distance = Math.sqrt(Math.pow(animal.position.x - mouseX + scrollX, 2) + Math.pow(animal.position.y - mouseY, 2));
+        const distance = Math.sqrt(Math.pow(animal.newPos.x - mouseX + scrollX, 2) + Math.pow(animal.newPos.y - mouseY, 2));
         return distance;
 
     }
