@@ -1,3 +1,4 @@
+
 class fieldManager {
     constructor() {
             this.sectors = {};
@@ -79,7 +80,7 @@ class fieldManager {
                 break;
         }
 
-        rect(xOffset, 0, this.sectorWidth, height-100); // セクションを描画
+        rect(xOffset, 0, this.sectorWidth, height); // セクションを描画
         // switch (terrain){
         //     case "grass":
         //         break;
@@ -93,10 +94,11 @@ class fieldManager {
         //     default:
         //         break;
         // }
-        textSize(32);
+        textSize(42);
+        //
         text(terrain, xOffset + 100, 200,100); // 地形名を表示
         text(sector, xOffset + 100, 300,100); // セクション番号を表示
-        text(scrollX, xOffset + 100, 400,100); // x座標を表示
+        text(-scrollX, xOffset + 100, 400,100); // x座標を表示
         //ellipse(xOffset + 100, 500, 100); // デコレーションを描画
         
         //pop();
@@ -114,3 +116,5 @@ class fieldManager {
         }
     }
 }
+
+export default fieldManager;

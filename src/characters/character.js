@@ -63,3 +63,7 @@ class Character {
     
 
 }
+
+
+// Characterクラスをエクスポート
+export default Character;

@@ -1,3 +1,8 @@
+
+// src/gameManager.js
+import { Echo,Deco } from './characters/animals.js';
+import fieldManager from './fieldManager.js';
+
 class GameManager {
   constructor() {
     this.count = 0;
@@ -19,13 +24,6 @@ class GameManager {
     this.numSectorsToDisplay = 11;
   }
 
-  addAnimal(animal){
-    this.animals.push(animal);
-  }
-
-  removeAnimalById(id){
-    this.animals = this.animals.filter(animal => animal.id !== id);
-  }
 
   // setup関数
   setup() {
@@ -37,11 +35,11 @@ class GameManager {
       brightness = ("#484848ff");
 
 
-      let animalCount  =30;
+      let animalCount  =60;
 
 
       for (let i = 0; i < animalCount; i++) {
-      this.xpos = random(-600, 4000);
+      this.xpos = random(-6000, 9000);
       this.ypos = random(0, height);
       const pos= createVector(this.xpos, this.ypos);
       if(i % 2 == 0){
@@ -54,7 +52,7 @@ class GameManager {
 
       }
 
-      let toggleButton = document.getElementById('toggleButton');
+      let toggleButton = document.getElementById('bag-icon');
       if (toggleButton) {
           toggleButton.addEventListener('click', this.toggleCaptureList.bind(this));
       } else {
@@ -92,27 +90,26 @@ class GameManager {
       }
 
       this.minIndex = Echo.findClosestAnimalIndex(distFromMouseList);
-      console.log(this.minIndex);
+      //console.log(this.minIndex);
       if (this.newMinIndex != this.minIndex) {
         this.newMinIndex = this.minIndex;
         this.captureCount = 0;
-        console.log("unko!");
       }
     
     
-      // for (let i = 0; i < this.animals.length; i++) {
-      //   let minDistFromOthers = Echo.calculateDistancesFromOthers(this.animals, i); 
-      //   if (minDistFromOthers[1].distance < 20) {
+      for (let i = 0; i < this.animals.length; i++) {
+        let minDistFromOthers = Echo.calculateDistancesFromOthers(this.animals, i); 
+        if (minDistFromOthers[1].distance < 20) {
 
-      //     ellipse(this.animals[i].newPos.x, this.animals[i].newPos.y, 100);
-      //     text("合体！", this.animals[i].newPos.x - this.animals[i].width, this.animals[i].newPos.y + this.animals[i].height / 2);
-      //     this.collisionFrameCount = this.collisionDisplayFrames; // フレームカウントをリセット
+          //ellipse(this.animals[i].newPos.x, this.animals[i].newPos.y, 100);
+          text("合体！", this.animals[i].newPos.x - this.animals[i].width, this.animals[i].newPos.y + this.animals[i].height / 2);
+          this.collisionFrameCount = this.collisionDisplayFrames; // フレームカウントをリセット
     
-      //     this.animals[i].onCollision(this.animals[minDistFromOthers[1].index]);
-      //     this.animals.splice(minDistFromOthers[1].index, 1);
-      //     this.animals[i].color = data[int(random(0, data.length))][1];
-      //   }
-      // }
+          this.animals[i].onCollision(this.animals[minDistFromOthers[1].index]);
+          this.animals.splice(minDistFromOthers[1].index, 1);
+          this.animals[i].color = data[int(random(0, data.length))][1];
+        }
+      }
     
       if (this.minIndex < 80 && mouseIsPressed) 
         {
@@ -134,6 +131,7 @@ class GameManager {
     
       this.count += 1;
     }
+
 // マウスホイールイベントをキャプチャしてスクロール位置を更新
   calcMouseWheel(event) {
       this.targetScrollX += event.deltaY; // マウスホイールの動きに応じてscrollXを更新
@@ -141,11 +139,7 @@ class GameManager {
   }
 
 
-      
-  
-  
-  
-  
+
   
   //カバン内の表示状態切り替え
   toggleCaptureList() {
@@ -166,7 +160,7 @@ class GameManager {
   
   updateCaptureList() {
       let animalList = document.getElementById('animalList');
-      let captureCountElement = document.getElementById('captureCount');
+      const captureCountElement = document.getElementById('captureCount');
       animalList.innerHTML = ''; // リストをクリア
       for (let i = 0; i < this.capturedAnimals.length; i++) {
       let li = document.createElement('li');
@@ -175,6 +169,7 @@ class GameManager {
       }
   
       if (this.capturedAnimals.length > 0) {
+      console.log(this.capturedAnimals.length);
       captureCountElement.textContent = this.capturedAnimals.length;
       captureCountElement.classList.add('show');
       } else {
@@ -226,3 +221,4 @@ class GameManager {
   }
 }
 
+export default GameManager;

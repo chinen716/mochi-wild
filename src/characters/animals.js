@@ -1,4 +1,7 @@
 
+import Character from './character.js';
+
+
 class Echo extends Character{
     constructor(width, height, startPos, speed, color, direction) {
       super(width, height, startPos, speed, color, direction);
@@ -168,20 +171,20 @@ class Echo extends Character{
       }
     }
       
-      onCollision(otherAnimal) {
-        // 衝突時に体の形状を更新
-        this.bodySize *= 1.1; // 修正: 100倍ではなく10%増加に変更
-        this.height = (this.height + otherAnimal.height) / 2 + (Math.random() - 0.5) * 10;
-        this.eyeCount = 2;
-      }
+    onCollision(otherAnimal) {
+      // 衝突時に体の形状を更新
+      this.bodySize *= 1.1; // 修正: 100倍ではなく10%増加に変更
+      this.height = (this.height + otherAnimal.height) / 2 + (Math.random() - 0.5) * 10;
+      this.eyeCount = 2;
+    }
 
-      // 色を混ぜ合わせる関数
-      mixColors(color1, color2) {
-        const r = Math.floor((color1.r + color2.r) / 2);
-        const g = Math.floor((color1.g + color2.g) / 2);
-        const b = Math.floor((color1.b + color2.b) / 2);
-        return { r, g, b };
-      }
+    // 色を混ぜ合わせる関数
+    mixColors(color1, color2) {
+      const r = Math.floor((color1.r + color2.r) / 2);
+      const g = Math.floor((color1.g + color2.g) / 2);
+      const b = Math.floor((color1.b + color2.b) / 2);
+      return { r, g, b };
+    }
 }
 
 
@@ -324,4 +327,14 @@ class Deco extends Character {
       pop();
       this.newPos = createVector(this.startPos.x , this.startPos.y );
   }
+  onCollision(otherAnimal) {
+    // 衝突時に体の形状を更新
+    this.bodySize *= 1.1; // 修正: 100倍ではなく10%増加に変更
+    this.height = (this.height + otherAnimal.height) / 2 + (Math.random() - 0.5) * 10;
+    this.eyeCount = 2;
+  }
 }
+
+
+// Characterクラスをエクスポート
+export {Echo,Deco} ;
