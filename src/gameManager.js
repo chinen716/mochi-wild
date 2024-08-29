@@ -39,7 +39,7 @@ class GameManager {
 
 
       for (let i = 0; i < animalCount; i++) {
-      this.xpos = random(-6000, 9000);
+      this.xpos = random(-9000, 9000);
       this.ypos = random(0, height);
       const pos= createVector(this.xpos, this.ypos);
       if(i % 2 == 0){
@@ -81,7 +81,7 @@ class GameManager {
 
       
       for (let i = 0; i < this.animals.length; i++) {
-        this.animals[i].drawAnimal();
+        this.animals[i].drawAnimal(false);
         noFill();
         //ellipse(this.animals[i].newPos.x, this.animals[i].newPos.y, 111);
         text(i,this.animals[i].newPos.x, this.animals[i].newPos.y,1);
@@ -162,10 +162,21 @@ class GameManager {
       let animalList = document.getElementById('animalList');
       const captureCountElement = document.getElementById('captureCount');
       animalList.innerHTML = ''; // リストをクリア
+
       for (let i = 0; i < this.capturedAnimals.length; i++) {
-      let li = document.createElement('li');
-      li.textContent = `動物 ${i + 1}: 色 ${this.capturedAnimals[i].color}`;
-      animalList.appendChild(li);
+      let div = document.createElement('div');
+      //console.log(this.capturedAnimals[i].controlPoints[1],this.capturedAnimals[i].controlPoints[2]);
+      div.className = 'capture-item';
+      div.innerHTML = `
+      <div class="capture-item-summary">動物 ${i + 1}: 頂点 ${this.capturedAnimals[i].bodyCenter}</div>
+      <div class="capture-item-details">
+          <p>詳細情報1</p>
+          <p>詳細情報2</p>
+          <div id="p5-canvas-${i + 1}"></div>
+          <button class="purchase-button">購入</button>
+      </div>
+  `
+      animalList.appendChild(div);
       }
   
       if (this.capturedAnimals.length > 0) {

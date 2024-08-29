@@ -22,12 +22,17 @@ class Character {
       }
 
 
-    calculateMovingFunctions() {
-        this.movingAmp = 8;
-        this.movingCosFunc = (1 + cos(millis() * 0.01 * this.direction)) * this.movingAmp;
-        this.movingSinFunc = (1 + sin(millis() * 0.01 * this.direction)) * this.movingAmp;
+    calculateMovingFunctions(staticBool) {
+        if(staticBool ==false){
+            this.movingAmp = 8;
+            this.movingCosFunc = (1 + cos(millis() * 0.01 * this.direction)) * this.movingAmp;
+            this.movingSinFunc = (1 + sin(millis() * 0.01 * this.direction)) * this.movingAmp;
+        }else{
+            this.movingAmp = 0;
+            this.movingCosFunc = 0;
+            this.movingSinFunc = 0;
+        }
     }
-  
     updateAnimalDirection(animal, activeLevel, count) {
         if ((activeLevel + count) % 80 === 0) {
             animal.direction = random(-3, 3);

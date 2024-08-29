@@ -43,16 +43,18 @@ class Echo extends Character{
       return direction;
     }
 
-  drawAnimal() {
+  drawAnimal(staticBool) {
 
-
+    
 
     //線の太さを設定
     this.setStrokeWeight();
     stroke("black");
+    if(staticBool == false){
+      this.direction = this.updateAnimalDirection(this.direction);
+      this.startPos.x = this.startPos.x + this.direction;
+    }
 
-    this.direction = this.updateAnimalDirection(this.direction);
-    this.startPos.x = this.startPos.x + this.direction;
     push();
     //ellipse(this.startPos.x, this.startPos.y, 111);
 
@@ -67,7 +69,7 @@ class Echo extends Character{
     this.vertices = [];
 
     //移動の振幅と関数
-    this.calculateMovingFunctions();
+    this.calculateMovingFunctions(staticBool);
 
     //目の数に応じた身体のサイズの調整
     if(this.eyeCount == 2 && this.twoEyesBool == false){
