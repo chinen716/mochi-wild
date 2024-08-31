@@ -170,13 +170,43 @@ class GameManager {
       div.innerHTML = `
       <div class="capture-item-summary">動物 ${i + 1}: 頂点 ${this.capturedAnimals[i].bodyCenter}</div>
       <div class="capture-item-details">
-          <p>詳細情報1</p>
-          <p>詳細情報2</p>
-          <div id="p5-canvas-${i + 1}"></div>
-          <button class="purchase-button">購入</button>
+          <div class = "details-container">
+            <div id="p5-small-canvas-${i + 1}" class="p5-small-canvas"></div> 
+            <div class ="details-text">
+              <p>詳細情報1</p>
+              <p>詳細情報2</p>
+              <div id="p5-canvas-${i + 1}"></div>
+                          <button class="purchase-button">購入</button>
+            </div>
+
+          </div>
       </div>
   `
       animalList.appendChild(div);
+
+      // // p5.jsの描画
+      // new p5((p) => {
+      //   p.setup = function() {
+      //     let canvas = p.createCanvas(100, 100);
+      //     canvas.parent(`p5-canvas-${i + 1}`);
+      //     p.background(200);
+      //   };
+      // });
+      
+      console.log(this.capturedAnimals[i].color);
+      let animalCol = this.capturedAnimals[i].color;
+      // 小さな四角形のp5.js描画
+      new p5((p) => {
+        p.setup = function() {
+          let smallCanvas = p.createCanvas(100, 100);
+          smallCanvas.parent(`p5-small-canvas-${i + 1}`);
+
+          p.background(animalCol);
+          p.rect(10, 10, 80, 80); // 四角形を描画
+        };
+      });
+
+
       }
   
       if (this.capturedAnimals.length > 0) {
