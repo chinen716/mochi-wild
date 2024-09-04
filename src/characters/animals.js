@@ -1,7 +1,6 @@
 
 import Character from './character.js';
 
-
 class Echo extends Character{
     constructor(width, height, startPos, speed, color, direction) {
       super(width, height, startPos, speed, color, direction);
@@ -44,9 +43,6 @@ class Echo extends Character{
     }
 
   drawAnimal(staticBool) {
-
-    
-
     //線の太さを設定
     this.setStrokeWeight();
     stroke("black");
@@ -111,14 +107,226 @@ class Echo extends Character{
       
       this.newPos = createVector(this.headCenter.x + displacement.x - this.width / 2, this.startPos.y - this.height / 2);
       ellipse(this.headCenter.x + displacement.x - this.width / 2, this.headCenter.y, 111);
-
+      ellipse(3,3, 111);
+      return(createVector(this.headCenter.x + displacement.x - this.width / 2,this.headCenter.y));
       //this.startPos.x = this.headCenter.x + displacement.x - this.width / 2;
 
       // 新しい位置を設定
 
 
       }
-      
+
+      drawAnimalAt(p, staticBool, x, y) {
+        
+        this.headCenter = createVector(x,y-(this.height-this.width/2));
+        this.bodyCenter = createVector(x,(y-this.bodySize/2));
+        this.bodyCorner0 = createVector(x+this.width/2*-1,y+this.bodySize/2);   // 1------2
+        this.bodyCorner1 = createVector(x+this.width/2*-1,y+this.bodySize/2*-1);// | body |
+        this.bodyCorner2 = createVector(x+this.width/2,y+this.bodySize/2*-1);   // |      |
+        this.bodyCorner3 = createVector(x+this.width/2,y+this.bodySize/2);      // 0------3
+  
+        // p5.js のプッシュポップを使って変換状態を保存
+        p.push();
+    
+        // // 引数に渡されたx, y座標に平行移動
+        // p.translate(x, y);
+    
+        // 線の太さを設定
+        p.strokeWeight(2);
+        p.stroke("black");
+    
+        // staticBool が false の場合、方向と位置を更新
+        if (!staticBool) {
+          this.direction = this.updateAnimalDirection(this.direction);
+          this.startPos.x = this.startPos.x + this.direction;
+        }
+    
+        // displacement の作成
+        //let displacement = p.createVector(this.startPos.x, 0);
+        let displacement = p.createVector(-this.newPos.x, 0);
+    
+        // // 新しい位置に平行移動
+        // p.translate(displacement);
+    
+        // // 頂点の初期化
+        this.vertices = [];
+    
+        // 移動の振幅と関数を計算
+        this.calculateMovingFunctions(staticBool);
+    
+        // 目の数に応じた身体のサイズの調整
+        if (this.eyeCount == 2 && !this.twoEyesBool) {
+          this.bodySizeOffset += this.width;
+          this.twoEyesBool = true;
+        }
+    
+        // 頂点の設定と描画
+        if (this.direction < 0) {
+          this.vertices.push({ x: this.bodyCorner0.x - this.bodySizeOffset + this.movingCosFunc, y: this.bodyCorner0.y });
+          this.vertices.push({ x: this.bodyCorner1.x - this.bodySizeOffset + this.movingSinFunc, y: this.bodyCorner1.y });
+          this.vertices.push({ x: this.bodyCorner2.x + this.bodySizeOffset + this.movingSinFunc, y: this.bodyCorner2.y });
+          this.vertices.push({ x: this.bodyCorner3.x + this.bodySizeOffset + 40 + this.movingCosFunc, y: this.bodyCorner3.y });
+    
+          // // 頂点を使って形状を描画
+          let pcontext = p.drawingContext;
+          pcontext.beginPath();
+          roundedPoly(pcontext, this.vertices,this.fillet);
+          pcontext.fillStyle = this.color;
+          pcontext.fill();
+          pcontext.stroke();
+
+
+          // 目を描画
+          this.generateEye(p, this.headCenter.x, this.headCenter.y, this.movingSinFunc, this.width, this.eyeCount, this.direction);
+        } else {
+          this.vertices.push({ x: this.bodyCorner0.x - this.bodySizeOffset - 40 - this.movingSinFunc, y: this.bodyCorner0.y });
+          this.vertices.push({ x: this.bodyCorner1.x - this.bodySizeOffset - this.movingCosFunc, y: this.bodyCorner1.y });
+          this.vertices.push({ x: this.bodyCorner2.x + this.bodySizeOffset - this.movingCosFunc, y: this.bodyCorner2.y });
+          this.vertices.push({ x: this.bodyCorner3.x + this.bodySizeOffset - 10 - this.movingSinFunc, y: this.bodyCorner3.y });
+    
+          // // 頂点を使って形状を描画
+          let pcontext = p.drawingContext;
+          pcontext.beginPath();
+          roundedPoly(pcontext, this.vertices,this.fillet);
+          pcontext.fillStyle = this.color;
+          pcontext.fill();
+          pcontext.stroke();
+    
+          // 目を描画
+          this.generateEye(pcontext, this.headCenter.x, this.headCenter.y, this.movingCosFunc, this.width, this.eyeCount, this.direction);
+        }
+    
+        // テキストのサイズ設定と描画
+        p.textSize(20);
+        p.text(this.newPos.x, this.headCenter.x, this.headCenter.y, 1);
+    
+        // p5.js のプッシュポップを使って変換状態をリセット
+        p.pop();
+      }
+    
+      generateEye(context,x, y, movingFunc, eyeSize, eyeCount, direction) {
+        //console.log(eyeCount);
+        if (eyeCount === 1) {
+          if (direction < 0) {
+            fill(EYE_COLOR);
+            context.ellipse(x + movingFunc, y, eyeSize);
+            fill(0, 0, 0);
+            context.ellipse(x + movingFunc, y, eyeSize / 2);
+          } else {
+            fill(EYE_COLOR);
+            context.ellipse(x - movingFunc, y, eyeSize);
+            fill(0, 0, 0);
+            context.ellipse(x - movingFunc, y, eyeSize / 2);
+          }
+        } else if (eyeCount === 2) {
+          if(direction <0){
+            fill(EYE_COLOR);
+            context.ellipse(x + movingFunc - eyeSize, y, eyeSize); // 左の目
+            fill(0, 0, 0);
+            context.ellipse(x + movingFunc - eyeSize, y, eyeSize / 2);
+            
+            fill(EYE_COLOR);
+            context.ellipse(x + movingFunc + eyeSize, y, eyeSize); // 右の目
+            fill(0, 0, 0);
+            context.ellipse(x + movingFunc + eyeSize, y, eyeSize / 2);
+          }else{
+            fill(EYE_COLOR);
+            context.ellipse(x - movingFunc - eyeSize, y, eyeSize); // 左の目
+            fill(0, 0, 0);
+            context.ellipse(x - movingFunc - eyeSize, y, eyeSize / 2);
+            
+            fill(EYE_COLOR);
+            context.ellipse(x - movingFunc + eyeSize, y, eyeSize); // 右の目
+            fill(0, 0, 0);
+            context.ellipse(x - movingFunc + eyeSize, y, eyeSize / 2);
+          }
+      }
+    }
+    
+
+
+
+      drawAnimal2(staticBool,x,y) {
+        console.log("hello");
+        //線の太さを設定
+        this.setStrokeWeight();
+        stroke("black");
+        if(staticBool == false){
+          this.direction = this.updateAnimalDirection(this.direction);
+          this.startPos.x = this.startPos.x + this.direction;
+        }
+
+        this.headCenter.x = x;
+        this.headCenter.y = y;
+        this.newPos = createVector(this.headCenter.x - this.width / 2, this.startPos.y - this.height / 2);
+        ellipse(this.headCenter.x  - this.width / 2, this.headCenter.y, 11);
+        
+
+
+        push();
+        //ellipse(this.startPos.x, this.startPos.y, 111);
+    
+        
+        let displacement = createVector(this.startPos.x, 0);
+    
+    
+    
+        // 新しい位置に平行移動
+        translate(displacement);
+    
+        // 頂点の初期化
+        this.vertices = [];
+    
+        //移動の振幅と関数
+        this.calculateMovingFunctions(staticBool);
+    
+        //目の数に応じた身体のサイズの調整
+        if(this.eyeCount == 2 && this.twoEyesBool == false){
+          this.bodySizeOffset += this.width;
+          this.twoEyesBool = true;
+        }
+    
+        if (this.direction <0) {
+            this.vertices.push({ x: this.bodyCorner0.x -this.bodySizeOffset + this.movingCosFunc, y: this.bodyCorner0.y });
+            this.vertices.push({ x: this.bodyCorner1.x -this.bodySizeOffset + this.movingSinFunc, y: this.bodyCorner1.y });
+            this.vertices.push({ x: this.bodyCorner2.x +this.bodySizeOffset + this.movingSinFunc, y: this.bodyCorner2.y });
+            this.vertices.push({ x: this.bodyCorner3.x +this.bodySizeOffset + 40 + this.movingCosFunc, y: this.bodyCorner3.y });
+            this.ctx.beginPath();
+            fill(this.color);
+            roundedPoly(this.ctx, this.vertices, this.fillet);
+            this.ctx.stroke();
+            this.ctx.fill();
+            this.generateEye(this.headCenter.x,this.headCenter.y,this.movingSinFunc,this.width,this.eyeCount,this.direction);
+            
+        } else {
+            this.vertices.push({ x: this.bodyCorner0.x -this.bodySizeOffset - 40 - this.movingSinFunc, y: this.bodyCorner0.y });
+            this.vertices.push({ x: this.bodyCorner1.x -this.bodySizeOffset - this.movingCosFunc, y: this.bodyCorner1.y });
+            this.vertices.push({ x: this.bodyCorner2.x +this.bodySizeOffset - this.movingCosFunc, y: this.bodyCorner2.y });
+            this.vertices.push({ x: this.bodyCorner3.x +this.bodySizeOffset - 10 - this.movingSinFunc, y: this.bodyCorner3.y });
+    
+            this.ctx.beginPath();
+            fill(this.color);
+            roundedPoly(this.ctx, this.vertices, this.fillet);
+            this.ctx.stroke();
+            this.ctx.fill();
+    
+            this.generateEye(this.headCenter.x,this.headCenter.y,this.movingCosFunc,this.width,this.eyeCount,this.direction);
+          }
+    
+          textSize(20);
+           text(this.newPos.x,this.headCenter.x,this.headCenter.y,1);
+    
+          pop();
+
+          ellipse(this.headCenter.x  - this.width / 2, this.headCenter.y, 111);
+          console.log(this.headCenter.x + displacement.x - this.width / 2);
+          console.log(this.headCenter.y); 
+          //this.startPos.x = this.headCenter.x + displacement.x - this.width / 2;
+    
+          // 新しい位置を設定
+    
+    
+          }
       generateEye(x, y, movingFunc, eyeSize, eyeCount, direction) {
         //console.log(eyeCount);
         if (eyeCount === 1) {

@@ -118,7 +118,7 @@ class GameManager {
         fill(255, 0, 0, 120);
         ellipse(this.animals[this.minIndex].newPos.x, this.animals[this.minIndex].newPos.y, this.captureCount);
 
-        if (this.captureCount > 100) {
+        if (this.captureCount > 10) {
           this.capturedAnimals.push(this.animals[this.minIndex]);
           this.animals.splice(this.minIndex, 1);
           this.captureCount = 0;
@@ -183,28 +183,37 @@ class GameManager {
       </div>
   `
       animalList.appendChild(div);
-
-      // // p5.jsの描画
-      // new p5((p) => {
-      //   p.setup = function() {
-      //     let canvas = p.createCanvas(100, 100);
-      //     canvas.parent(`p5-canvas-${i + 1}`);
-      //     p.background(200);
-      //   };
-      // });
-      
-      console.log(this.capturedAnimals[i].color);
-      let animalCol = this.capturedAnimals[i].color;
-      // 小さな四角形のp5.js描画
+      //console.log(this.capturedAnimals[i].color);
+      let animm = this.capturedAnimals[i];
+      // p5.jsの描画
       new p5((p) => {
+        p.animm = animm;
         p.setup = function() {
-          let smallCanvas = p.createCanvas(100, 100);
-          smallCanvas.parent(`p5-small-canvas-${i + 1}`);
 
-          p.background(animalCol);
-          p.rect(10, 10, 80, 80); // 四角形を描画
+          let canvas = p.createCanvas(2000, 1500);
+          canvas.parent(`p5-canvas-${i + 1}`);
+          p.background(200);
+          //p.rect(2,3, 20, 50);
+          console.log("drawing");
+          p.animm.drawAnimalAt(p,true,30,60);
+          //p.ellipse(3,3, 111);
         };
       });
+      
+
+      
+
+      // // 小さな四角形のp5.js描画
+      // new p5((p) => {
+      //   p.setup = function() {
+      //     let smallCanvas = p.createCanvas(100, 100);
+      //     smallCanvas.parent(`p5-small-canvas-${i + 1}`);
+      //     animm.drawAnimal2(true,50,50);
+      //     console.log("drawAnimal2");
+      //     //p.background(animm.color);
+      //     //p.rect(10, 10, 80, 80); // 四角形を描画
+      //   };
+      // });
 
 
       }
